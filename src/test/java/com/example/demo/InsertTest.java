@@ -19,7 +19,6 @@ public class InsertTest {
         Event event = new Event();
         event.setId("500");
         Event savedUser = eventRepository.save(event);
-
         assertNotNull(savedUser.getId());
     }
 }
