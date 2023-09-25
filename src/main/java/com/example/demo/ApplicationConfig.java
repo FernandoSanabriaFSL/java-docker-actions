@@ -30,7 +30,7 @@ public class ApplicationConfig {
             String encodedUser = URLEncoder.encode(dbUser, "UTF-8");
             String encodedPassword = URLEncoder.encode(dbPassword, "UTF-8");
 
-            String uri = String.format("mongodb+srv://%s:%s@%s/%s",
+            String uri = String.format("mongodb://%s:%s@%s/%s",
                     encodedUser, encodedPassword, clusterAddress, dbName);
             return MongoClients.create(uri);
         } catch (Exception e) {
