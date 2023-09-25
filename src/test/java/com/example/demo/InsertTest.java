@@ -14,11 +14,6 @@ public class InsertTest {
 
     @Autowired
     private EventRepository eventRepository;
-    Event event = new Event();
-
-    Event savedUser = event.save(event);
-
-    assert(savedUser.getId());
 
     @Test
     public void testInsertUser() {
