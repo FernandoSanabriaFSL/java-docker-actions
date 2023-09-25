@@ -15,12 +15,19 @@ jobs:
     environment: testing
     runs-on: ubuntu-latest
 
-    env:
-      MONGODB_CONNECTION_PROTOCOL: mongodb+srv
-      MONGODB_CLUSTER_ADDRESS: cluster0.au2o0dy.mongodb.net
-      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-
+  env:
+  MONGODB_CONNECTION_PROTOCOL: mongodb
+  MONGODB_CLUSTER_ADDRESS: mongodb
+  MONGODB_USERNAME: root
+  MONGODB_PASSWORD: example
+  PORT: 8080
+  services:
+    mongodb:
+      image: mongo
+      ports: 27017:27017
+      env:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: example
 
     steps:
       - name: Get Code
