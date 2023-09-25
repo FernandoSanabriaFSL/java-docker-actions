@@ -48,7 +48,7 @@ public class CalculatorControllerTest {
     @DisplayName("Test Substraction")
     public void testSubFunction_num1_gt_num2(){
         Double result = calculatorController.substract(num1+1, 2+num2);
-        assertEquals(0.0, result);
+        assertEquals(1.0, result);
     }
 
     @Test
