@@ -2,22 +2,59 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+      - dev
+
+env:
+  CACHE_KEY: gradle-deps
+  MONGODB_DB_NAME: gha-demo
 
 jobs:
-  build:
-
+  test:
+    environment: testing
     runs-on: ubuntu-latest
+
+    env:
+      MONGODB_CONNECTION_PROTOCOL: mongodb+srv
+      MONGODB_CLUSTER_ADDRESS: cluster0.au2o0dy.mongodb.net
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
+      - name: Get Code
+        uses: actions/checkout@v3
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
         with:
-          distribution: temurin
-          java-version: 11
+          path: ~/.gradle/caches
+          key: ${{ env.CACHE_KEY }}-${{ hashFiles('**/gradle.properties') }}
+
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
 
-      - name: Execute Gradle build
+      - name: Build and Test with Gradle
         run: ./gradlew build
+
+      - name: Start server (for future steps)
+        run: ./gradlew bootRun & sleep 10
+
+      - name: Output information
+        run: |
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+          echo "${{ env.PORT }}"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output deployment information
+        env:
+          PORT: 3000
+        run: |
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+          echo "${{ env.PORT }}"
