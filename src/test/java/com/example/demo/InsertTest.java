@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataMongoTest
 @Import(ApplicationConfig.class)
 public class InsertTest {
 
