@@ -14,6 +14,8 @@ jobs:
   test:
     environment: testing
     runs-on: ubuntu-latest
+    container:
+      image: adoptopenjdk:11-jdk-hotspot
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
       MONGODB_CLUSTER_ADDRESS: mongodb
