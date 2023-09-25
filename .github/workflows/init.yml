@@ -14,11 +14,10 @@ jobs:
   test:
     environment: testing
     runs-on: ubuntu-latest
-    container:
-      image: adoptopenjdk:11-jdk-hotspot
+
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
-      MONGODB_CLUSTER_ADDRESS: mongodb
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
@@ -33,6 +32,12 @@ jobs:
     steps:
       - name: Get Code
         uses: actions/checkout@v3
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ env.CACHE_KEY }}-${{ hashFiles('**/gradle.properties') }}
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
