@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.net.URLEncoder;
+
 @Configuration
 public class ApplicationConfig {
     @Value("${MONGODB_USERNAME}")
@@ -21,11 +23,19 @@ public class ApplicationConfig {
     @Value("${MONGODB_DB_NAME}")
     private String dbName;
 
+
     @Bean
     public MongoClient mongoClient() {
-        String uri = String.format("mongodb://%s:%s@%s/%s?retryWrites=true&w=majority",
-                dbUser, dbPassword, clusterAddress, dbName);
-        return MongoClients.create(uri);
+        try {
+            String encodedUser = URLEncoder.encode(dbUser, "UTF-8");
+            String encodedPassword = URLEncoder.encode(dbPassword, "UTF-8");
+
+            String uri = String.format("mongodb+srv://%s:%s@%s/%s",
+                    encodedUser, encodedPassword, clusterAddress, dbName);
+            return MongoClients.create(uri);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating MongoClient", e);
+        }
     }
 
     @Bean
